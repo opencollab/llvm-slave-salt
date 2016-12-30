@@ -1,0 +1,9 @@
+[Unit]
+Description=Jenkins Daemon
+
+[Service]
+ExecStart=/home/jenkins/run-slave.sh
+User=jenkins
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3 @@
+#deb     http://jenkins.grml.org/debian jenkins-debian-glue-release main
+#deb-src http://jenkins.grml.org/debian jenkins-debian-glue-release main
+
