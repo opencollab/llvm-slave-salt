@@ -2,6 +2,7 @@
 
 fail2ban: pkg.installed
 ntp: pkg.installed
+ntpdate: pkg.installed
 emacs-nox: pkg.installed
 cowbuilder: pkg.installed
 rsync: pkg.installed
@@ -18,6 +19,16 @@ openjdk-8-jre-headless: pkg.installed
 git-buildpackage: pkg.installed
 quilt: pkg.installed
 fakeroot: pkg.installed
+
+munin-node:
+  pkg:
+    - installed
+  service.running:
+    - watch:
+      - file: /etc/munin/munin-node.conf
+  file.managed:
+     - name: /etc/munin/munin-node.conf
+     - source: salt://llvm-slave-jenkins/munin-node.conf
 
 jenkins:
   group:
