@@ -51,21 +51,12 @@ create obs for api user@%:
     - host: \%
     - password: {{salt['pillar.get']('obs-database:lookup:obs-api-database-password') }}
 
-create webui database:
-  mysql_database.present:
-    - name: {{salt['pillar.get']('obs-database:lookup:obs-webui-database') }}
-    - host: localhost
-    - connection_user: 'root'
-    - connection_pass: {{salt['pillar.get']('obs-database:lookup:root-password') }}
-    - connection_charset: utf8
-        
 grant permission:
   cmd.script:
     - name: grant_permissions.sh
-    - source: salt://obs_scripts/grant_permissions.sh
+    - source: salt://llvm-obs/obs-scripts/grant_permissions.sh
 
 mysql_restart:
   module.wait:
     - name: service.restart
     - m_name: mysql
-

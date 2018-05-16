@@ -9,7 +9,7 @@ obs-api:
     - installed
   file.managed:
      - name: /usr/share/obs/api/config/database.yml
-     - source: salt://obs_conf/obs-api_database.yml
+     - source: salt://llvm-obs/obs-conf/obs-api_database.yml
      - template: jinja
 
 populate_database setup db:
@@ -48,7 +48,7 @@ enable apache ssl module:
 create self signed ssl for testing:
   cmd.script:
     - name: generate_ssl.sh
-    - source: salt://obs_scripts/generate_ssl.sh
+    - source: salt://llvm-obs/obs-scripts/generate_ssl.sh
 
 reload apache:
   service.running:
