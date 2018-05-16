@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir /srv/obs/certs
+mkdir -p /srv/obs/certs
 openssl genrsa -out /srv/obs/certs/server.key 1024
 openssl req -new -key /srv/obs/certs/server.key \
 	         -out /srv/obs/certs/server.csr

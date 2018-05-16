@@ -8,9 +8,9 @@
 
 production:
   adapter: mysql2
-  database: api_production
-  username: obs
-  password: topsecretpasskey
+  database: {{salt['pillar.get']('obs-database:lookup:obs-api-database') }} 
+  username: {{salt['pillar.get']('obs-database:lookup:obs-user') }}
+  password: {{salt['pillar.get']('obs-database:lookup:obs-api-database-password') }}
   encoding: utf8
   timeout: 15
   pool: 30

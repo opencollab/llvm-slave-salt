@@ -13,14 +13,14 @@ reload-mysql:
 root_user:
   mysql_user.present:
     - name: 'root'
-    - password: 'TOPSECRET'
+    - password: {{salt['pillar.get']('obs-database:lookup:root-password')}}
 
 mysql remove anonymous users:
   mysql_user.absent:
     - name: ''
     - host: 'localhost'
     - connection_user: 'root'
-    - connection_pass: 'TOPSECRET'
+    - connection_pass: {{salt['pillar.get']('obs-database:lookup:root-password') }}
     - connection_charset: utf8
 
 mysql remove test database:
@@ -28,65 +28,41 @@ mysql remove test database:
     - name: test
     - host: 'localhost'
     - connection_user: 'root'
-    - connection_pass: 'TOPSECRET'
+    - connection_pass: {{salt['pillar.get']('obs-database:lookup:root-password') }}
     - connection_charset: utf8
 
 create api database:
   mysql_database.present:
-    - name: api_production
+    - name: {{salt['pillar.get']('obs-database:lookup:obs-api-database') }}
     - host: localhost
     - connection_user: 'root'
-    - connection_pass: 'TOPSECRET'
+    - connection_pass: {{salt['pillar.get']('obs-database:lookup:root-password') }}
     - connection_charset: utf8
 
 create obs for api user@localhost:
   mysql_user.present:
-    - name: obs
+    - name: {{salt['pillar.get']('obs-database:lookup:obs-user') }}
     - host: localhost
-    - password: 'topsecretpasskey'
+    - password: {{salt['pillar.get']('obs-database:lookup:obs-api-database-password') }}
 
 create obs for api user@%:
   mysql_user.present:
-    - name: obs
+    - name: {{salt['pillar.get']('obs-database:lookup:obs-user') }}
     - host: \%
-    - password: 'topsecretpasskey'
-
-obs_grants to api obs@localhost:
-  mysql_grants.present:
-    - host: localhost
-    - database: api_production.\*
-    - grant: all privileges
-    - user: obs
-
-obs_grants to api obs@%:
-  mysql_grants.present:
-    - host: \%
-    - database: api_production.\*
-    - grant: all privileges
-    - user: obs
+    - password: {{salt['pillar.get']('obs-database:lookup:obs-api-database-password') }}
 
 create webui database:
   mysql_database.present:
-    - name: webui_production
+    - name: {{salt['pillar.get']('obs-database:lookup:obs-webui-database') }}
     - host: localhost
     - connection_user: 'root'
-    - connection_pass: 'TOPSECRET'
+    - connection_pass: {{salt['pillar.get']('obs-database:lookup:root-password') }}
     - connection_charset: utf8
-
-#Grant permissions to obs:
-#  mysql_query.run:
-#    - database: api_production
-#    - connection_user: root
-#    - connection_pass: TOPSECRET
-#    - output:   "/tmp/query_id.txt"
-#    - query: |
-#        GRANT all privileges ON api_production.* TO 'obs'@'%', 'obs'@'localhost';
-#        FLUSH PRIVILEGES;
         
 grant permission:
   cmd.script:
     - name: grant_permissions.sh
-    - source: salt://llvm-obs/obs-scripts/grant_permissions.sh
+    - source: salt://obs_scripts/grant_permissions.sh
 
 mysql_restart:
   module.wait:
