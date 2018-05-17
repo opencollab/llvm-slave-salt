@@ -22,15 +22,21 @@ populate_database write configuration:
      - name: "RAILS_ENV=\"production\" rake writeconfiguration"
      - cwd: /usr/share/obs/api/
 
-change permission for log:
-  cmd.run:
-     - name: "chown -R www-data /usr/share/obs/api/log"
-     - cwd: /usr/share/obs/api/
+/usr/share/obs/api/log:
+  file.directory:
+    - user: www-data
+    - group: www-data
+    - recurse:
+      - user
+      - group
 
-change permission for tmp:
-  cmd.run:
-     - name: "chown -R www-data /usr/share/obs/api/tmp"
-     - cwd: /usr/share/obs/api
+/usr/share/obs/api/temp:
+  file.directory:
+    - user: www-data
+    - group: www-data
+    - recurse:
+      - user
+      - group
 
 install apache:
   pkg.installed:

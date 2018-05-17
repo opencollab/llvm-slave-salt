@@ -55,6 +55,7 @@ grant permission:
   cmd.script:
     - name: grant_permissions.sh
     - source: salt://llvm-obs/obs-scripts/grant_permissions.sh
+    - template: jinja
 
 mysql_restart:
   module.wait:
