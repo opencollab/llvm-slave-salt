@@ -30,7 +30,7 @@ populate_database write configuration:
       - user
       - group
 
-/usr/share/obs/api/temp:
+/usr/share/obs/api/tmp:
   file.directory:
     - user: www-data
     - group: www-data
