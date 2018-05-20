@@ -48,7 +48,7 @@ create obs for api user@localhost:
 create obs for api user@%:
   mysql_user.present:
     - name: {{salt['pillar.get']('obs-database:lookup:obs-user') }}
-    - host: \%
+    - host: '%'
     - password: {{salt['pillar.get']('obs-database:lookup:obs-api-database-password') }}
 
 grant permission:
