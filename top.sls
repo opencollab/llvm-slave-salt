@@ -8,3 +8,6 @@ base:
   'E@obs-server* or E@irill8*':
     - obs-common
     - obs-server
+  'E@obs-worker* or E@korcula.*':
+    - obs-common
+    - obs-worker
