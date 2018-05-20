@@ -14,15 +14,15 @@ enable obs workers:
 set obs source server:
   file.replace:
     - name: /etc/default/obsworker
-    - pattern: '^OBS_SRC_SERVER="obs:5352"'
-    - repl: '{{salt['pillar.get']('obs-database:lookup:obs-server')}}:5352'
+    - pattern: ^OBS_SRC_SERVER.*
+    - repl: 'OBS_SRC_SERVER="{{salt['pillar.get']('obs-database:lookup:obs-server')}}:5352"'
     - count: 1
 
 set obs repo server:
   file.replace:
     - name: /etc/default/obsworker
-    - pattern: '^OBS_REPO_SERVER="obs:5252"'
-    - repl: '{{salt['pillar.get']('obs-database:lookup:obs-server')}}:5252'
+    - pattern: ^OBS_REPO_SERVERS.*
+    - repl: 'OBS_REPO_SERVERS="{{salt['pillar.get']('obs-database:lookup:obs-server')}}:5252"'
     - count: 1
 
 obsworker:
