@@ -5,6 +5,6 @@ base:
     - match: compound
     - llvm-slave
     - apt-common-pinning
-#  'E@obs-server*':
-#    - obs-common
-#    - obs-server
+  'E@obs-server* or E@irill8*':
+    - obs-common
+    - obs-server
