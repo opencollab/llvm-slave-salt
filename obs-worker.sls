@@ -1,3 +1,5 @@
+{% set obs-server = 'irill8.siege.inria.fr' %}
+
 install obs server packages:
   pkg.installed:
     - pkgs:
@@ -15,14 +17,14 @@ set obs source server:
   file.replace:
     - name: /etc/default/obsworker
     - pattern: ^OBS_SRC_SERVER.*
-    - repl: 'OBS_SRC_SERVER="{{salt['pillar.get']('obs-database:lookup:obs-server')}}:5352"'
+    - repl: 'OBS_SRC_SERVER="{{ obs-server }}:5352"'
     - count: 1
 
 set obs repo server:
   file.replace:
     - name: /etc/default/obsworker
     - pattern: ^OBS_REPO_SERVERS.*
-    - repl: 'OBS_REPO_SERVERS="{{salt['pillar.get']('obs-database:lookup:obs-server')}}:5252"'
+    - repl: 'OBS_REPO_SERVERS="{{ obs-server }}:5252"'
     - count: 1
 
 obsworker:
