@@ -6,4 +6,4 @@ obs-database:
     obs-webui-database: obs_webui_production
     obs-api-database-password: topsecretpasskey
     obs-webui-database-password: topsecretpasskey
-    obs-server: localhost
+    obs-server: irill8.siege.inria.fr
