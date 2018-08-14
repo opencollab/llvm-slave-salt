@@ -50,6 +50,9 @@ install_obs_build_from_backports:
       - obs-build
     - fromrepo: stretch-backports
 
+# We use libsolv from testing due to a debian control
+# size limitation in older versions of the lib
+# see https://athoscr.me/blog/gsoc2018-7/
 install_libsolv_from_testing:
   pkg.latest:
     - pkgs:
@@ -58,6 +61,8 @@ install_libsolv_from_testing:
       - libsolvext0
     - fromrepo: buster
 
+# This is needed due to an incompatible version of
+# nokogiri (which was updated) in Stretch
 /usr/share/obs/api/Gemfile:
   file.managed:
     - source: salt://obs-server/Gemfile
