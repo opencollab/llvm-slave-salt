@@ -1,8 +1,7 @@
 <configuration>
   <title>Debian LLVM OBS builder</title>
   <description>  &lt;p class="description"&gt;
-		The Debian LLVM OBS builder is used to both distribute upstream LLVM .deb packages
-and perform experimental builds of the Debian archive against Clang.
+		The Debian LLVM OBS perform experimental builds of the Debian archive with Clang instead of GCC.
   &lt;/p&gt;
   &lt;p class="description"&gt;
 For questions and suggestions, please contact Sylvestre at sylvestre@debian.org
