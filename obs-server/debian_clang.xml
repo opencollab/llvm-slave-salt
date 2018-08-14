@@ -1,6 +1,6 @@
 <project name="Debian:Unstable:Clang">
 <title>Debian Clang Rebuilds</title>
-<description>Rebuild Debian Archive against Clang compiler</description>
+<description>Rebuild Debian Archive with Clang instead of gcc</description>
 <person userid="Admin" role="maintainer"/>
 <useforbuild>
   <disable/>
