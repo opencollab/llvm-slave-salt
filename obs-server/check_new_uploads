@@ -68,8 +68,7 @@ for num in data[0].split():
         pkg = parse_message(parsed_email.get_payload())
         if (pkg['dist'] in ['unstable', 'sid']) and 'source' in pkg['arch']:
             trigger_build(pkg)
-    # Uncomment the following lines if you want to remove the email afterwards
-    # M.store(num, '+FLAGS', '\\Deleted')
-# M.expunge()
+    M.store(num, '+FLAGS', '\\Deleted')
+M.expunge()
 M.close()
 M.logout()
