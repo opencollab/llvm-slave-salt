@@ -1,4 +1,11 @@
-# Open Build Service at irill8.siege.inria.fr
+# LLVM salt states
+
+This repository hosts salt states to configure servers related to Debian LLVM
+packages.
+
+## Jenkins at llvm-jenkins.debian.net
+
+## Open Build Service at irill8.siege.inria.fr
 
 This repository hosts salt states to provision our OBS intance at
 irill8.siege.inria.fr.
@@ -6,7 +13,7 @@ irill8.siege.inria.fr.
 For now, this OBS instance monitors the debian-devel-changes mailing list and
 triggers Clang builds for newly accepted packages
 
-## Adding new workers to the OBS instance
+### Adding new workers to the OBS instance
 
 To configure new workers to our current OBS instance hosted at
 irill8.siege.inria.fr, just set new salt slaves and provision them with
