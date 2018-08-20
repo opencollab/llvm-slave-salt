@@ -15,9 +15,9 @@ if [ "$PKG" == "obs-service-clang-build" ]; then
     echo 'Preparing obs-service-clang-build package...'
     mkdir obs-service-clang-build
     cd obs-service-clang-build/
-    wget 'https://www.ime.usp.br/~athoscr/files/obs/obs-service-clang-build_0.1-1.debian.tar.xz'
-    wget 'https://www.ime.usp.br/~athoscr/files/obs/obs-service-clang-build_0.1-1.dsc'
-    wget 'https://www.ime.usp.br/~athoscr/files/obs/obs-service-clang-build_0.1.orig.tar.gz'
+    cp /tmp/obs-service-clang-build_0.1-1.debian.tar.xz .
+    cp /tmp/obs-service-clang-build_0.1-1.dsc .
+    cp /tmp/obs-service-clang-build_0.1.orig.tar.gz .
     cd /root/Debian\:Unstable\:Clang
     osc add obs-service-clang-build > /dev/null 2>&1
     osc ci -m 'First clang-build package' > /dev/null 2>&1

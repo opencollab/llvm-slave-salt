@@ -150,6 +150,27 @@ create_debian_clang_project:
   cmd.run:
     - name: osc meta prj Debian:Unstable:Clang -F /tmp/debian_clang.xml
 
+/tmp/obs-service-clang-build_0.1.orig.tar.gz:
+  file.managed:
+    - source: salt://obs-server/obs-service-clang-build_0.1.orig.tar.gz
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/obs-service-clang-build_0.1-1.debian.tar.xz:
+  file.managed:
+    - source: salt://obs-server/obs-service-clang-build_0.1-1.debian.tar.xz
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/obs-service-clang-build_0.1-1.dsc:
+  file.managed:
+    - source: salt://obs-server/obs-service-clang-build_0.1-1.dsc:
+    - user: root
+    - group: root
+    - mode: 644
+
 /usr/local/bin/trigger_clang_build:
   file.managed:
     - source: salt://obs-server/trigger_clang_build
