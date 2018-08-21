@@ -1,19 +1,24 @@
-/etc/apt/sources.list:
-  file.managed:
-    - source: salt://obs-server/sources.list
-    - user: root
-    - group: root
-    - mode: 644
+install_stretch_backports_repo:
+  pkgrepo.managed:
+      - humanname: stretch-backports
+      - name: deb http://httpredir.debian.org/debian stretch-backports main
+      - file: /etc/apt/sources.list.d/stretch-backports.list
+
+install_buster_repo:
+  pkgrepo.managed:
+      - humanname: buster
+      - name: deb http://httpredir.debian.org/debian buster main
+      - file: /etc/apt/sources.list.d/buster.list
+
+install_sid_src_repo:
+  pkgrepo.managed:
+      - humanname: sid-src
+      - name: deb-src http://httpredir.debian.org/debian sid main
+      - file: /etc/apt/sources.list.d/sid-src.list
 
 obs:
   host.present:
     - ip: 127.0.0.1
-
-refresh_packages_db:
-  cmd.run:
-    - name: apt-get update -y
-    - onchanges:
-      - file: /etc/apt/sources.list
 
 install_obs_server_packages:
   pkg.installed:
@@ -49,6 +54,7 @@ install_obs_build_from_backports:
     - pkgs:
       - obs-build
     - fromrepo: stretch-backports
+    - refresh: True
 
 # We use libsolv from testing due to a debian control
 # size limitation in older versions of the lib
@@ -60,6 +66,7 @@ install_libsolv_from_testing:
       - libsolv-perl
       - libsolvext0
     - fromrepo: buster
+    - refresh: True
 
 # This is needed due to an incompatible version of
 # nokogiri (which was updated) in Stretch
@@ -166,7 +173,7 @@ create_debian_clang_project:
 
 /tmp/obs-service-clang-build_0.1-1.dsc:
   file.managed:
-    - source: salt://obs-server/obs-service-clang-build_0.1-1.dsc:
+    - source: salt://obs-server/obs-service-clang-build_0.1-1.dsc
     - user: root
     - group: root
     - mode: 644
