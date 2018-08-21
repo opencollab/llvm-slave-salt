@@ -8,7 +8,6 @@ if [ ! -d Debian\:Unstable\:Clang ]; then
 osc co Debian:Unstable:Clang > /dev/null 2>&1
 fi
 cd Debian\:Unstable\:Clang/
-osc up > /dev/null 2>&1
 
 if [ "$PKG" == "obs-service-clang-build" ]; then
   if ! osc ls Debian:Unstable:Clang obs-service-clang-build > /dev/null 2>&1; then
@@ -52,4 +51,4 @@ if ! $PKG_EXISTS; then
 else
   osc addremove $PKG > /dev/null 2>&1
 fi
-osc ci -m "New $PKG package clang build" > /dev/null 2>&1 
+osc ci $PKG -m "New $PKG package clang build" > /dev/null 2>&1 
