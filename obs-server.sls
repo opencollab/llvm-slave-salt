@@ -1,3 +1,9 @@
+preferences:
+    file.managed:
+        - name: /etc/apt/preferences
+        - source: salt://obs-server/preferences
+        - reload_modules: true
+
 install_stretch_backports_repo:
   pkgrepo.managed:
       - humanname: stretch-backports
@@ -54,7 +60,6 @@ install_obs_build_from_backports:
     - pkgs:
       - obs-build
     - fromrepo: stretch-backports
-    - refresh: True
 
 # We use libsolv from testing due to a debian control
 # size limitation in older versions of the lib
@@ -66,7 +71,6 @@ install_libsolv_from_testing:
       - libsolv-perl
       - libsolvext0
     - fromrepo: buster
-    - refresh: True
 
 # This is needed due to an incompatible version of
 # nokogiri (which was updated) in Stretch
