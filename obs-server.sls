@@ -1,4 +1,32 @@
-install obs server packages:
+preferences:
+    file.managed:
+        - name: /etc/apt/preferences
+        - source: salt://obs-server/preferences
+        - reload_modules: true
+
+install_stretch_backports_repo:
+  pkgrepo.managed:
+      - humanname: stretch-backports
+      - name: deb http://httpredir.debian.org/debian stretch-backports main
+      - file: /etc/apt/sources.list.d/stretch-backports.list
+
+install_buster_repo:
+  pkgrepo.managed:
+      - humanname: buster
+      - name: deb http://httpredir.debian.org/debian buster main
+      - file: /etc/apt/sources.list.d/buster.list
+
+install_sid_src_repo:
+  pkgrepo.managed:
+      - humanname: sid-src
+      - name: deb-src http://httpredir.debian.org/debian sid main
+      - file: /etc/apt/sources.list.d/sid-src.list
+
+obs:
+  host.present:
+    - ip: 127.0.0.1
+
+install_obs_server_packages:
   pkg.installed:
     - pkgs:
       - obs-server
@@ -9,11 +37,11 @@ obs-api:
   pkg:
     - installed
   file.managed:
-     - name: /usr/share/obs/api/config/database.yml
-     - source: salt://llvm-obs/obs-conf/obs-api_database.yml
-     - template: jinja
+    - name: /usr/share/obs/api/config/database.yml
+    - source: salt://llvm-obs/obs-conf/obs-api_database.yml
+    - template: jinja
 
-install apache:
+install_apache:
   pkg.installed:
     - pkgs:
       - apache2
@@ -22,11 +50,167 @@ install apache:
       - libapache2-mod-xforward
       - memcached
 
-create self signed ssl for testing:
+create_self_signed_ssl_for_testing:
   cmd.script:
     - name: generate_ssl.sh
     - source: salt://llvm-obs/obs-scripts/generate_ssl.sh
 
-rake task setup:
+install_obs_build_from_backports:
+  pkg.latest:
+    - pkgs:
+      - obs-build
+    - fromrepo: stretch-backports
+
+# We use libsolv from testing due to a debian control
+# size limitation in older versions of the lib
+# see https://athoscr.me/blog/gsoc2018-7/
+install_libsolv_from_testing:
+  pkg.latest:
+    - pkgs:
+      - libsolv0
+      - libsolv-perl
+      - libsolvext0
+    - fromrepo: buster
+
+# This is needed due to an incompatible version of
+# nokogiri (which was updated) in Stretch
+/usr/share/obs/api/Gemfile:
+  file.managed:
+    - source: salt://obs-server/Gemfile
+    - user: root
+    - group: root
+    - mode: 644
+
+{% if salt['grains.get']('api_setup') != 'done' %}
+rake_task_setup:
   cmd.run:
      - name: "bash /usr/share/obs/api/script/rake-tasks.sh setup"
+  grains.present:
+    - name: api_setup
+    - value: done
+
+restart_apache:
+  service.running:
+    - name: apache2
+    - enable: True
+    - watch:
+      - rake_task_setup
+{% endif %}
+
+start_obsservice:
+  service.running:
+    - name: obsservice
+    - enable: True
+
+/root/.oscrc:
+  file.managed:
+    - source: salt://obs-server/oscrc
+    - user: root
+    - group: root
+    - mode: 600
+    - template: jinja
+
+/tmp/obs_instance_configuration.xml:
+  file.managed:
+    - source: salt://obs-server/obs_instance_configuration.xml
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/debian_unstable.xml:
+  file.managed:
+    - source: salt://obs-server/debian_unstable.xml
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/debian_unstable.conf:
+  file.managed:
+    - source: salt://obs-server/debian_unstable.conf
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/debian_clang.xml:
+  file.managed:
+    - source: salt://obs-server/debian_clang.xml
+    - user: root
+    - group: root
+    - mode: 644
+
+restart_obssrcserver:
+  service.running:
+    - name: obssrcserver
+    - enable: True
+    - watch:
+      - create_self_signed_ssl_for_testing
+
+set_obs_instance_configurations:
+  cmd.run:
+    - name: osc api /configuration -T /tmp/obs_instance_configuration.xml
+
+create_debian_unstable_project:
+  cmd.run:
+    - name: osc meta prj Debian:Unstable -F /tmp/debian_unstable.xml
+
+configure_debian_unstable_project:
+  cmd.run:
+    - name: osc meta prjconf Debian:Unstable -F /tmp/debian_unstable.conf
+
+create_debian_clang_project:
+  cmd.run:
+    - name: osc meta prj Debian:Unstable:Clang -F /tmp/debian_clang.xml
+
+/tmp/obs-service-clang-build_0.1.orig.tar.gz:
+  file.managed:
+    - source: salt://obs-server/obs-service-clang-build_0.1.orig.tar.gz
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/obs-service-clang-build_0.1-1.debian.tar.xz:
+  file.managed:
+    - source: salt://obs-server/obs-service-clang-build_0.1-1.debian.tar.xz
+    - user: root
+    - group: root
+    - mode: 644
+
+/tmp/obs-service-clang-build_0.1-1.dsc:
+  file.managed:
+    - source: salt://obs-server/obs-service-clang-build_0.1-1.dsc
+    - user: root
+    - group: root
+    - mode: 644
+
+/usr/local/bin/trigger_clang_build:
+  file.managed:
+    - source: salt://obs-server/trigger_clang_build
+    - user: root
+    - group: root
+    - mode: 755
+
+build_obs_clang_build_package:
+  cmd.run:
+    - name: trigger_clang_build obs-service-clang-build
+
+/usr/local/bin/check_new_uploads:
+  file.managed:
+    - source: salt://obs-server/check_new_uploads
+    - user: root
+    - group: root
+    - mode: 755
+  cron.present:
+    - user: root
+    - minute: 15
+    - hour: '*/2'
+
+/tmp/obs_service_clang_build_meta.xml:
+  file.managed:
+    - source: salt://obs-server/obs_service_clang_build_meta.xml
+    - user: root
+    - group: root
+    - mode: 644
+
+allow_obs_service_clang_build_usage:
+  cmd.run:
+    - name: osc meta pkg Debian:Unstable:Clang obs-service-clang-build -F /tmp/obs_service_clang_build_meta.xml
