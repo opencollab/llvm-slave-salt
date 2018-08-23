@@ -1,0 +1,26 @@
+<project name="@DISTRIBUTION@">
+	<title>@DISTRIBUTION@</title>
+	<description> A download on demand repository for offical deb sources for amd64 and i586 </description>
+	<person userid="admin" role="maintainer"/>
+	<build>
+		<disable/>
+	</build>
+	<publish>
+		<disable/>
+	</publish>
+	<debuginfo>
+		<disable/>
+	</debuginfo>
+	<repository name="main">
+		<download arch="amd64" url="@URL@" repotype="deb">
+		</download>
+		<download arch="i586" url="@URL@" repotype="deb">
+		</download>
+		<arch>amd64</arch>
+		<arch>i586</arch>
+	</repository>
+</project>
+
+
+		
+
