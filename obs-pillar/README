@@ -1,1 +1,0 @@
-The default pillar root is /srv/pillar and can be changed in salt master configuration.

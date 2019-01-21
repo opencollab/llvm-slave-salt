@@ -1,6 +1,0 @@
-[general]
-apiurl = https://{{ salt['pillar.get']('obs-hosts:lookup:server') }}
-
-[https://{{ salt['pillar.get']('obs-hosts:lookup:server') }}]
-user = Admin
-pass = {{salt['pillar.get']('obs-osc:lookup:pass') }}
