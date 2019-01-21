@@ -19,6 +19,8 @@ openjdk-8-jre-headless: pkg.installed
 git-buildpackage: pkg.installed
 quilt: pkg.installed
 fakeroot: pkg.installed
+# for some reasons, req of salt
+python-futures: pkg.installed
 
 munin-node:
   pkg:
@@ -127,6 +129,16 @@ llvm_jenkins_repo:
     - target: /usr/share/debootstrap/scripts/trusty
     - force: True
 
+/usr/share/debootstrap/scripts/cosmic:
+  file.symlink:
+    - target: /usr/share/debootstrap/scripts/trusty
+    - force: True
+
+/usr/share/debootstrap/scripts/disco:
+  file.symlink:
+    - target: /usr/share/debootstrap/scripts/trusty
+    - force: True
+
 /usr/share/debootstrap/scripts/buster:
   file.symlink:
     - target: /usr/share/debootstrap/scripts/stretch
@@ -139,9 +151,9 @@ llvm_jenkins_repo:
     - mkmnt: True
     - opts: 
       - username=jenkins
-      - password=PASSWORD
-      - uid=1006
-      - gid=1006
+      - password=__jenkins++45
+      - uid=jenkins
+      - gid=jenkins
 
 /home/{{ site_user }}/.gnupg:
   file.recurse:
@@ -150,3 +162,8 @@ llvm_jenkins_repo:
     - user: {{ site_user }}
     - group: {{ site_user }}
     - dir_mode: 700
+
+if test -d /var/cache/pbuilder/build; then rm -rf $(find /var/cache/pbuilder/build -maxdepth 1 -cmin +720); fi:
+  cron.present:
+    - user: root
+    - special: '@daily'
